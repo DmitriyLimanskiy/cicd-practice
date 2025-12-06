@@ -1,38 +1,41 @@
-name: GitHub Actions Demo
-on: [push]
+name: CI
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
 jobs:
-    init:
+    build-and-test:
         runs-on: ubuntu-latest
+
         strategy:
             matrix:
                 node-version: [20.x]
+
         steps:
-            - uses: actions/checkout@v5
+            - name: Checkout repository
+              uses: actions/checkout@v5
 
-            - name: Cache dependencies
-              uses: actions/cache@v3
-              with:
-                  path: node_modules
-                  key: node-modules-${{ hashFiles('package-lock.json') }}
-
-            - name: Setup Node.js ${{ matrix.node-version }}
+            - name: Setup Node.js
               uses: actions/setup-node@v5
               with:
                   node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
 
-            - name: Install modules
+            - name: Install dependencies
               run: npm install
 
             - name: Build project
-              run: npm run build # Vite build
+              run: npm run build
 
             - name: Build Storybook
               run: npm run build:storybook
 
-            - name: Unit tests
-              run: npm run test:unit
+            - name: Run unit tests
+              run: npm run test:unit -- --watchAll=false
 
-            - name: E2E tests
+            - name: Run E2E tests
               run: npm run test:e2e
 
             - name: Lint code
