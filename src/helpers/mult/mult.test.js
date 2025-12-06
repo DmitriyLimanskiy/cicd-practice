@@ -1,10 +1,10 @@
-import { minus } from './mult';
+import { mult } from './mult';
 
 describe('mult', () => {
     test('positive', () => {
-        expect(minus(5, 5)).toBe(25);
+        expect(mult(5, 5)).toBe(25);
     });
     test('negative', () => {
-        expect(minus(-5, -5)).toBe(-25);
+        expect(mult(-5, -5)).toBe(25);
     });
 });
